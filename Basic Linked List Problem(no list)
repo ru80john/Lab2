@@ -1,0 +1,115 @@
+#include<iostream>
+
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *prev;
+    Node *next;
+};
+
+void insert(Node *ht, int in)
+{
+    Node *nd = new Node;
+    Node *in_back = ht->next;
+
+    nd->data = in;
+    nd->prev = ht;
+    nd->next = in_back;
+
+    ht->next = nd;
+    in_back->prev = nd;
+}
+
+void remove(Node *h)
+{
+    Node *pr = h->prev;
+    Node *ne = h->next;
+
+    pr->next = ne;
+    ne->prev = pr;
+
+    delete h;
+}
+
+void search(Node *h, Node *t,int in)
+{
+    while (h != t){
+        if (h->data == in) {
+        cout << "Y\n";
+        return;
+        }
+        h = h->next;
+    }
+    cout << "N\n";
+    return;
+}
+
+void output(Node *h, Node *t)
+{
+    while (h != t){
+        cout << h->data << " ";
+        h = h->next;
+    }
+    cout << "\n";
+    return;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    Node *head = new Node;
+    Node *tail = new Node;
+
+    head->next = tail;
+    head->prev = NULL;
+    tail->prev = head;
+    tail->next = NULL;
+    string op;
+    for (int i = 0; i<n; ++i) {
+        cin >> op;
+        if (op == "IH") {
+            int in;
+            cin >> in;
+            insert(head, in);
+        }
+        else if (op == "IT") {
+            int in;
+            cin >> in;
+            insert(tail->prev, in);
+        }
+        else if (op == "RH") {
+            if (head->next != tail) {
+                remove(head->next);
+            }
+        }
+        else if (op == "RT") {
+            if (head->next != tail) {
+                remove(tail->prev);
+            }
+        }
+        else if (op == "S") {
+            if (head->next == tail){
+                cout << "E\n";
+            }
+            else{
+                int in;
+                cin >> in;
+                search(head->next, tail, in);
+            }
+
+        }
+        else if (op == "O") {
+            if (head->next !=tail){
+                output(head->next, tail);
+            }
+            else{
+                cout << "E\n";
+            }
+        }
+    }
+    return 0;
+}
